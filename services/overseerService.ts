@@ -3,7 +3,13 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { ObjectiveType, AuditData, OverseerJudgment } from '../types';
 
 export const generateJudgment = async (objective: ObjectiveType, data: AuditData): Promise<OverseerJudgment> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process?.env?.API_KEY;
+  
+  if (!apiKey) {
+    throw new Error("CRITICAL: API_KEY_MISSING. ACCESS DENIED BY OVERSEER.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   const systemInstruction = `
     # 角色定义
